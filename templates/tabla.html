@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla con Flask</title>
+    <style>
+        .formulario-edicion {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mi Tabla</h1>
+
+    <form action="/insertar" method="post">
+        <label for="valor_a">Valor A:</label>
+        <input type="text" name="valor_a" required>
+
+        <label for="valor_b">Valor B:</label>
+        <input type="text" name="valor_b" required>
+
+        <button type="submit">Insertar Datos</button>
+    </form>
+
+    <form action="/calcular" method="post">
+        <button type="submit">Calcular Resultados</button>
+    </form>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>a</th>
+                <th>b</th>
+                <th>multiplicacion</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for fila in datos %}
+                <tr>
+                    <td>{{ fila.a1 }}</td>
+                    <td>{{ fila.b2 }}</td>
+                    <td>{{ fila.multiplicacion }}</td>
+                    <td>
+                        <button onclick="mostrarFormulario('{{ loop.index0 }}')">Modificar</button>
+                        <form id="formulario-edicion-{{ loop.index0 }}" class="formulario-edicion" action="/modificar" method="post">
+                            <input type="hidden" name="fila_id" value="{{ loop.index0 }}">
+                            <label for="nuevo_valor_a">Nuevo Valor A:</label>
+                            <input type="text" name="nuevo_valor_a" value="{{ fila.a1 }}" required>
+                            <label for="nuevo_valor_b">Nuevo Valor B:</label>
+                            <input type="text" name="nuevo_valor_b" value="{{ fila.b2 }}" required>
+                            <button type="submit">Guardar</button>
+                        </form>
+                        
+                        <form action="/eliminar" method="post">
+                            <input type="hidden" name="fila_id" value="{{ loop.index0 }}">
+                            <button type="submit">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <!-- Agrega el botón de generar PDF -->
+    <form action="/generar_pdf" method="get">
+        <button type="submit">Generar PDF</button>
+    </form>
+    <script>
+        function mostrarFormulario(index) {
+            // Muestra el formulario de edición correspondiente
+            var formularioActual = document.getElementById('formulario-edicion-' + index);
+            formularioActual.style.display = 'block';
+        }
+    </script>
+    
+</body>
+</html>
